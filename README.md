@@ -15,7 +15,7 @@ Education is an ERP System offering a complete school management system with sta
 
 > Hosted on Heroku on a ClearDB MySQL Database, using JetBrains DataGrip to connect to the database.
 
--   [https://education-erp.herokuapp.com/](https://education-erp.herokuapp.com/)
+-   [https://laravelerp.onrender.com/](https://laravelerp.onrender.com/)
 
 # Developer Notes
 
@@ -99,55 +99,6 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-# Deploying on Heroku
-
-> Credentials for this project are redacted for security reasons. Step-by-step instructions below.
-
--   [Heroku - Getting Started with Laravel](https://devcenter.heroku.com/articles/getting-started-with-laravel)
-
-## Prepare Git
-
--   `git init`
--   `git add .`
--   `git commit -m "new laravel project"`
-
-## Create a Procfile
-
-This is required to tell Heroku where to serve the project from. i.e. with Laravel this must be from the public folder.
-
--   `echo "web: vendor/bin/heroku-php-apache2 public/" > Procfile`
--   `git add .`
--   `git commit -m "Procfile for Heroku"`
-
-## Create Application
-
--   `heroku create`
-    -   Set a Laravel encryption key
-        -   `php artisan key:generate --show`
-        -   `heroku config:set APP_KEY=<your_app_key_goes_here>`
--   Deploy
-    -   `git push heroku master`
-
-## Set up Database
-
--   Configure Add-ons
-    -   Select `ClearDB MySQL`
-        -   This will generate a MySQL database and generate credentials (connection string with database name, username, password) in Config Vars (`CLEARDB_DATABASE_URL`)
-
-## Config Vars
-
-| Key                  | Value                      |
-| -------------------- | -------------------------- |
-| APP_KEY              | \<your_app_key_goes_here>  |
-| CLEARDB_DATABASE_URL | \<automatically_generated> |
-| APP_DEBUG            | False                      |
-| DB_CONNECTION        | mysql                      |
-| DB_DATABASE          | \<database_name_goes_here> |
-| DB_HOST              | \<host_goes_here>          |
-| DB_PASSWORD          | \<password_goes_here>      |
-| DB_PORT              | 3306                       |
-| DB_USERNAME          | \<username_goes_here>      |
-| APP_ENV              | production                 |
 
 ## Migrate the Tables
 

@@ -22,7 +22,7 @@ ENV NPM_ALLOW_SUPERUSER 1
 ENV YARN_ALLOW_SUPERUSER 1
 ENV NPX_ALLOW_SUPERUSER 1
 RUN chmod 777 ./*
-RUN docker-php-ext-configure zip 
+#RUN docker-php-ext-configure zip 
 RUN docker-php-ext-install zip
 
 RUN composer install 

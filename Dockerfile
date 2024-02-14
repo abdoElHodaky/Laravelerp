@@ -1,13 +1,13 @@
 FROM richarvey/nginx-php-fpm:2.1.2
 RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata postgresql postgresql-dev
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-COPY . .
+COPY . /var/www/html/
 
 ENV SKIP_COMPOSER 0
 ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
 ENV REAL_IP_HEADER 1
-#ENV WEBROOT /var/www/html/public
+ENV WEBROOT /var/www/html/public/
 
 # Laravel config
 ENV APP_KEY base64:R+QG2UfUtR9sswBurkqPoviy25XANaKrV/i/xE8ulPU=

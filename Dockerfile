@@ -1,5 +1,5 @@
 FROM richarvey/nginx-php-fpm:2.1.0
-RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata postgresql postgresql-dev
+RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata postgresql postgresql-devzip zlib-dev
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY . .
 
@@ -22,9 +22,11 @@ ENV NPM_ALLOW_SUPERUSER 1
 ENV YARN_ALLOW_SUPERUSER 1
 ENV NPX_ALLOW_SUPERUSER 1
 RUN chmod 777 ./*
+RUN docker-php-ext-configure zip --with-zlib-dir=/usr/include
+RUN docker-php-ext-install zip
 
 RUN composer install 
-#RUN php artisan db:wipe --drop-types --force && php artisan migrate:install
-#RUN php artisan migrate --force
-#RUN php artisan db:seed --force
+RUN php artisan db:wipe --drop-types --force && php artisan migrate:install
+RUN php artisan migrate --force
+RUN php artisan db:seed --force
 EXPOSE 80

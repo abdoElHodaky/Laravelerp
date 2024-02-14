@@ -1,5 +1,5 @@
 FROM richarvey/nginx-php-fpm:2.1.0
-RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata postgresql postgresql-dev zip libzip zlib-dev
+RUN apk add -U --no-cache nghttp2-dev nodejs npm unzip tzdata postgresql postgresql-dev zip libzip libzip-dev
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY . .
 

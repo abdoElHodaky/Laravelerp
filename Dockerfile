@@ -8,14 +8,13 @@ ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
 ENV REAL_IP_HEADER 1
 ENV APP_URL 0.0.0.0
-#ENV WEBROOT /var/www/html/public/
 
 # Laravel config
 ENV APP_KEY base64:R+QG2UfUtR9sswBurkqPoviy25XANaKrV/i/xE8ulPU=
 ENV APP_ENV production
 ENV APP_DEBUG true
 ENV LOG_CHANNEL stderr
-ENV APP_URL 0.0.0.0
+
 
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER 1

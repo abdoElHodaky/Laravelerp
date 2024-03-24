@@ -7,13 +7,14 @@ ENV SKIP_COMPOSER 0
 ENV PHP_ERRORS_STDERR 1
 ENV RUN_SCRIPTS 1
 ENV REAL_IP_HEADER 1
-ENV APP_URL 0.0.0.0
+
 
 # Laravel config
 ENV APP_KEY base64:R+QG2UfUtR9sswBurkqPoviy25XANaKrV/i/xE8ulPU=
 ENV APP_ENV production
 ENV APP_DEBUG true
 ENV LOG_CHANNEL stderr
+ENV APP_URL 0.0.0.0
 
 
 # Allow composer to run as root
@@ -22,7 +23,7 @@ ENV NODEJS_ALLOW_SUPERUSER 1
 ENV NPM_ALLOW_SUPERUSER 1
 ENV YARN_ALLOW_SUPERUSER 1
 ENV NPX_ALLOW_SUPERUSER 1
-RUN chmod 777 ./*
+RUN chmod -R 777 .
 #RUN docker-php-ext-configure zip 
 #RUN docker-php-ext-install zip
 

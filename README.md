@@ -15,7 +15,7 @@ Education is an ERP System offering a complete school management system with sta
 
 > Hosted on Heroku on a ClearDB MySQL Database, using JetBrains DataGrip to connect to the database.
 
--   [https://laravelerp.onrender.com/](https://laravelerp.onrender.com/)
+-   [https://laravelerp.onrender.com/](https://laravelerp.onrender.com/public)
 
 # Developer Notes
 

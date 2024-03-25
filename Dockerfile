@@ -23,12 +23,11 @@ ENV NODEJS_ALLOW_SUPERUSER 1
 ENV NPM_ALLOW_SUPERUSER 1
 ENV YARN_ALLOW_SUPERUSER 1
 ENV NPX_ALLOW_SUPERUSER 1
-#RUN chmod -R 777 .
+RUN chmod +x run.sh
 RUN composer install 
 RUN php artisan cache:clear && php artisan view:clear
 
 #RUN php artisan db:wipe --drop-types --force && php artisan migrate:install
 #RUN php artisan migrate --force
 #RUN php artisan db:seed --force
-EXPOSE 80 
-EXPOSE 82
+EXPOSE 80 82

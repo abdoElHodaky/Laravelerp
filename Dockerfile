@@ -29,4 +29,4 @@ RUN composer install && chmod -R 777 .
 #RUN php artisan db:wipe --drop-types --force && php artisan migrate:install
 #RUN php artisan migrate --force
 #RUN php artisan db:seed --force
-EXPOSE 80 82
+EXPOSE 82

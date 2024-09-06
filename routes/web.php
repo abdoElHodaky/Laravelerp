@@ -56,7 +56,18 @@ use App\Http\Controllers\Backend\Report\ResultReportController;
 Route::get('/', function () {
     return view('auth.login');
 });
-
+Route::post("/login",function(\Request $request){
+    $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            if(auth()->usertype=="Admin") return redirect()->intended('dashboard');
+        }
+    return response()->status(403)->json(["message"=>"Forbidden"])
+});
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('admin.index');
 })->name('dashboard');

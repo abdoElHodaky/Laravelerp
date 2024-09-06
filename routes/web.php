@@ -56,7 +56,7 @@ use App\Http\Controllers\Backend\Report\ResultReportController;
 Route::get('/', function () {
     return view('auth.login');
 });
-Route::post("/login",function(use \Request $request){
+Route::post("/login",function(use (\Request $request)){
     $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

@@ -56,7 +56,7 @@ use App\Http\Controllers\Backend\Report\ResultReportController;
 Route::get('/', function () {
     return view('auth.login');
 });
-Route::post("/login",function(\Request $request){
+Route::post("/login",function( use \Request $request){
     $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -64,7 +64,7 @@ Route::post("/login",function(\Request $request){
  
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            if(auth()->usertype=="Admin") return redirect()->intended('dashboard');
+            if(Auth::user()->usertype=="Admin") return redirect()->intended('dashboard');
         }
     return response()->json(["message"=>"Forbidden"],403);
 });

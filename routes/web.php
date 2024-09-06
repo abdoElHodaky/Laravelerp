@@ -66,7 +66,7 @@ Route::post("/login",function(\Request $request){
             $request->session()->regenerate();
             if(auth()->usertype=="Admin") return redirect()->intended('dashboard');
         }
-    return response()->status(403)->json(["message"=>"Forbidden"])
+    return response()->json(["message"=>"Forbidden"],403)
 });
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('admin.index');

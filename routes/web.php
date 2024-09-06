@@ -40,7 +40,7 @@ use App\Http\Controllers\Backend\Report\ProfiteController;
 use App\Http\Controllers\Backend\Report\MarkSheetController;
 use App\Http\Controllers\Backend\Report\AttenReportController;
 use App\Http\Controllers\Backend\Report\ResultReportController;
-use Illuminate\Http\Request
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------

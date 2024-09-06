@@ -5,10 +5,24 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use Auth;
 class UserController extends Controller
 {
-    public function UserView(){
+    
+     public  function Login(Request $request){
+      $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            if(Auth::user()->usertype=="Admin") return redirect()->intended('dashboard');
+        }
+        else return response()->json(["message"=>"Forbidden"],403);
+     }
+    
+     public function UserView(){
     	// $allData = User::all();
     	$data['allData'] = User::where('usertype','Admin')->get();
     	return view('backend.user.view_user',$data);

@@ -70,7 +70,7 @@ Route::get('/login', [UserController::class, 'Login'])->name('login');
         }
         else return response()->json(["message"=>"Forbidden"],403);
 });*/
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+Route::middleware(['auth:sanctum', ''])->get('/dashboard', function () {
     return view('admin.index');
 })->name('dashboard');
 

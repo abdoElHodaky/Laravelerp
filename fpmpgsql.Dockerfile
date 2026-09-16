@@ -51,7 +51,7 @@ USER root
 
 ENV PGDATA=/var/lib/postgresql/data
 
-# Install runtime packages & S6 service registration for Postgres
+# Install runtime packages & register Postgres as an S6 service daemon
 RUN install-php-extensions pdo_pgsql pgsql \
     && apk add --no-cache postgresql postgresql-client su-exec curl \
     && mkdir -p /run/postgresql \
@@ -69,12 +69,13 @@ COPY --from=postgres_builder --chown=postgres:postgres $PGDATA $PGDATA
 
 WORKDIR /var/www/html
 
-# Environment Variables
+# Consolidated Environment Variables (including OPcache and Superuser flags)
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     NODEJS_ALLOW_SUPERUSER=1 \
     NPM_ALLOW_SUPERUSER=1 \
     YARN_ALLOW_SUPERUSER=1 \
     NPX_ALLOW_SUPERUSER=1 \
+    PHP_OPCACHE_ENABLE=1 \
     WEB_ROOT=/var/www/html/public \
     APP_ENV=production \
     APP_DEBUG=false \
@@ -83,33 +84,31 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
     APP_KEY=base64:R+QG2UfUtR9sswBurkqPoviy25XANaKrV/i/xE8ulPU= \
     DATABASE_URL=pgsql://laravel_user:secretpassword@127.0.0.1:5432/laravel
 
-# PHP-FPM Performance & Resource Tuning
+# PHP-FPM Performance & Resource Adjustments
 RUN echo 'pm.max_children = 15' >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
     echo 'pm.max_requests = 500' >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
     echo 'memory_limit = 256M' > /usr/local/etc/php/conf.d/zz-memory.ini && \
     echo 'upload_max_filesize = 64M' >> /usr/local/etc/php/conf.d/zz-memory.ini && \
     echo 'post_max_size = 64M' >> /usr/local/etc/php/conf.d/zz-memory.ini
 
-# Copy application files, vendor dependencies, and compiled frontend assets
+# Copy build artifacts and source code
 COPY --chown=www-data:www-data --from=composer_build /app/vendor ./vendor
 COPY --chown=www-data:www-data --from=node_build /app/public/build ./public/build 2>/dev/null || true
 COPY --chown=www-data:www-data --from=node_build /app/public/js ./public/js 2>/dev/null || true
 COPY --chown=www-data:www-data --from=node_build /app/public/css ./public/css 2>/dev/null || true
 COPY --chown=www-data:www-data . .
 
-# Secure file permissions & create missing storage subdirectories
+# Set strict permissions and create necessary storage directories
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Safe Production Caching (Using dummy DB connection to prevent boot-time DB connection errors)
-RUN DB_CONNECTION=sqlite php artisan config:cache \
-    && DB_CONNECTION=sqlite php artisan route:cache \
-    && DB_CONNECTION=sqlite php artisan view:cache \
+# Safe Build-Time Optimization (Using SQLite driver to safely bypass external DB requirement during build)
+RUN DB_CONNECTION=sqlite php artisan optimize \
     && php artisan storage:link --force
 
-# Self-Contained Entrypoint Script (Handles background DB startup, migrations, and hands over to S6)
+# Inline Entrypoint Script: Boots embedded Postgres, runs migrations safely, then hands control to S6 Overlay (/init)
 RUN echo '#!/usr/bin/env sh' > /docker-entrypoint.sh && \
     echo 'set -e' >> /docker-entrypoint.sh && \
     echo 'echo "Starting local PostgreSQL instance..."' >> /docker-entrypoint.sh && \
@@ -119,7 +118,7 @@ RUN echo '#!/usr/bin/env sh' > /docker-entrypoint.sh && \
     echo 'echo "Running database migrations..."' >> /docker-entrypoint.sh && \
     echo 'php artisan migrate --force' >> /docker-entrypoint.sh && \
     echo 'su-exec postgres pg_ctl -D /var/lib/postgresql/data -m fast stop' >> /docker-entrypoint.sh && \
-    echo 'exec /s6-init' >> /docker-entrypoint.sh && \
+    echo 'exec /init' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 
 EXPOSE 8080

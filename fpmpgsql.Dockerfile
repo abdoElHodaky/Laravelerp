@@ -123,7 +123,7 @@ RUN echo '#!/usr/bin/env sh' > /docker-entrypoint.sh && \
 
 EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+#HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+#  CMD curl -f http://localhost:8080/ || exit 1
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
